@@ -1,0 +1,261 @@
+# melody-editor.lmms
+
+```
+Creates a plugin: libmelodyeditor.so - under LMMS/Qt6.
+```
+
+A text based melody notations parser for [LMMS](https://github.com/LMMS/lmms); feeding SARGAM and English Notations.
+It is asscessible from Tools > Melody Editor.
+
+This plguin allows a user to type in or drop in song notations file into an editor area.
+These notations are then parsed to create a MIDI Clip Data within the Piano-Roll window.
+An intermediary XML string is created on the fly that simulates Import MIDI Clip feature; as if working with .xpt file.
+
+# Features
+
+- Ctrl+Wheel to zoom in/out notations text.
+- Double click on text area to choose a notation file.
+- Drag and Drop of a notation file into the melody editor area.
+- File system watcher for a dropped in file, if it is edited externally: it updates here, silently.
+- Extremely powerful parser for SARGAM notations in Romanized forms; and Devangari scripts.
+  - A little memory usage while operating.
+  - Fast and Light weight, and small footprint.
+  - 20kb limits applied on input file size.
+  - Does not obstruct live playing in the Piano Roll.
+- Multiple parsers (SARGAM, Carnatic, English, and some more in progress.)
+- Works by manipulation of .xpt format input from text notations.
+
+# Quick Manual
+
+ - Open song editor.
+ - Double click on it to open a piano roll window.
+ - Go to: Tools > Melody Editor.
+ - Fill in the notations (based on your notation systems).
+ - Click on Update MIDI Clip.
+
+ Thats it!
+
+# Next Step
+ - Learn about how to write notations [here](https://github.com/anytizer/melody-editor.lmms) for this plugin.
+ - Also in LMMS Discussion page [here](https://github.com/LMMS/lmms/discussions/7950).
+
+# Compile as a native plugin for LMMS
+
+Prepare to patch your LMMS source codebase.
+
+(PianoRoll.cpp, PianoRoll.h)'s currentMidiClip() is a 'const'.
+- Remove the object's `const` marker(s). Change as:
+
+```
+~~const~~ MidiClip* currentMidiClip() ~~const~~
+```
+
+to:
+
+```
+MidiClip* currentMidiClip() ()
+```
+
+Then, import this plugin into LMMS's plugin repository.
+
+```
+cd lmms/plugins
+ln -s <THIS-PROJECT's-ROOT-PATH> MelodyEditor
+
+# eg.
+# cd lmms/plugins
+# ln -s /media/USER/DISK/path/to/MelodyEditor MelodyEditor
+```
+
+Or, copy the plugin's source code (aka MelodyEditor) into __lmms/plugins__ folder.
+
+Enable (or add) `MelodyEditor` in `cmake/modules/PluginList.cmake` file.
+
+Then `make` or compile the copy of your LMMS.
+It will add `libmelodyeditor.so` file into the plugin repository.
+This plugin is now accessible from the Tools Menu; sending data to a Piano-Roll.
+
+# Change History
+
+## 2025-12-16
+
+ - Better variable names.
+ - Enhance documentation, and links.
+ - Screenhot added [here](src/assets/screenshot.png).
+ - Icons for identification of the notation system.
+
+## 2025-12-11
+
+ - Clearly pointed which files to modify to compile it as an LMMS Plugin.
+ - A notification is added to open a Piano-Roll first; when __Update MIDI Clip__ applied to an empty target.
+ - Changed binary name to more specific name libmelodyeditor.so from libmelody.so
+ - Setting stay-on-top window flag by default.
+ - Smoother text zoom.
+ - Applied scroll bar with text zoom.
+ - Improved documentation texts.
+ - Removed unnecessary UI elements that were originally intended to write to external files.
+ - A lot of source code commented, in order to remove them in future.
+
+## 2025-09-28
+
+ - Using custom text editor for zooming text with mouse wheel and ctrl key
+ - Open a notation file with double click on the editor
+ - comment a line ctrl+slash
+ - ctrl+enter to update the midi clip instantly
+
+## 2025-09-15
+
+ - Plugin compiled back in Qt 5 as well. However, Qt6 preferred.
+ - Updated the documentations.
+
+## 2025-07-08
+
+ - Disabled incomplete parsers. Rework and Help required.
+ - Decopupling MelodyEditor and MelodyEditorView. Remove friend functions.
+ - Implemented QFileSystemWatcher when an external file was dropped in.
+ - Support drag/drop of external notation file in .txt format
+ - Added the list of keys allowed in specific system.
+ - Some sample notations added for testing purpose.
+ - Example for testing English notes added.
+
+## 2025-06-28
+
+ - Early version of Carnatic parser added.
+ - Individualized parsers on their own files.
+ - Project started as a decopupled code from previous efforts.
+
+## 2025-06-19
+
+- `class` to `struct` for Cell, and FindAndReplace
+- Improve and fix typos in comments.
+- Bring .h file contents together on top of the code.
+- Bit length controller in pixels - comments changed for Cell.
+- fr changed to replaces.
+- Removed some completed todos.
+
+# Documentation
+
+You need to format your notations into human readable form with the following considerations.
+
+Features              | Western notes Parser           | SARGAM notes Parser          | Virtual Keyboard Parser
+----------------------|--------------------------------|------------------------------|-------------------------
+Natural notes allowed | `C D E F G A B C# D# F# G# A#` | `S R G m P D N r g M d n`    | Alpha-Numerals (QWERTY) keyboard
+Higher octaves marker | Append octave number eg. `C5 D6` | Append an asterisk `*` eg. `S*, R**` | ??
+Lower octaves marker  | Append octave number eg. `C3 D2` | Append a dot `.` eg. `S., R..` | ??
+Chord Making          | Brace notes within `[` and `]` | Brace notes within `[` and `]` | Brace notes within `[` and `]`
+Longer chord lengths  | Add a dash `-` BEFORE `]`.     | Add a dash `-` before `]`.     | Add a dash `-` before `]`.
+Time shared / split notes | Comma eg. `C#,D#`          | Comma eg. `r,g`                | ??
+Silence / Pause marker| Use `x` wherever needed.       | Use `x` wherever needed.       | `SPACE` character
+Longer silence marker | Introduce another `x`.         | Introduce another `x`.         | Introduce a pipe `|`.
+Continuation mark     | Add a dash `-`                 | Add a dash `-`                 | ??
+Comments per line     | Start a line with hash `#`.    | Start a line with hash `#`.    | ??
+Sharps / Flats        | Only sharps understood. ~~flats~~ | Lower case for komal notes. | ??
+Example 1 - chords    | `[ C E G  - - - ] A A,B A G`   | `[ S R G - - - ] D D,N D P`    | [qwe]tyu-iop
+Example 2 - long note | `G3 A3 E4 D4 - G4,A4 B4 D5 C5 - - -` | `P. D. G R - P,D N R* S* - - -`  | ??
+Example 3 - silence / pause | `C x D x E x G -`  | `S x R x G x P -` | ??
+Help Link / Discuss   | [here](https://github.com/LMMS/lmms/discussions/7950) | [here](https://github.com/LMMS/lmms/discussions/7950) | [here](https://github.com/LMMS/lmms/discussions/7950)
+
+# Other notes and Trouble-Shooting
+
+* Chords must have been terminated with corresponding `]`.
+* __Error Count__: Number of notes that were NOT converted for use in LMMS is returned. __Remedies__:
+  - Look for accidentally joined notations
+  - Or illegal notes or characters like: __E#__.
+  - Non-existing notation like __J__.
+
+# Testing Examples
+
+* Set signature: 3/4, 180 bpm.
+* Set active midi clip window.
+* Open LMMS Menu > Tools > Melody Editor.
+* Paste one of the notes from below, in the input area.
+* Select the correct notation type or parsing engine.
+* Hit "Update MIDI Clip".
+* Now, play the song ;-)
+
+## Courtesy/Resemblance:
+
+- __Happy Birthday__ / AI search results and human edits.
+
+## Example 1: SARGAM in Romanized Letters
+
+```
+x r,r g  - r M - m -
+x r,r g  - r M - M -
+x r,r r* - n M - g -
+x N,N n  - M d - M -
+```
+
+## Example 2: SARGAM in Devaganari Scripts
+
+```
+x रे॒,रे॒   ग॒   -  रे॒  मे  -  म -
+x रे॒,रे॒   ग॒   -  रे॒  मे  -  मे -
+x रे॒,रे॒   रे॒*  -  नि॒  मे  -  ग॒ -
+x नि,नि  नि॒  -  मे  नि॒  -  मे -
+```
+
+## Example 3: English, with Symbols
+
+```
+x C#,C# D#  - C# F# - F  -
+x C#,C# D#  - C# F# - F# -
+x C#,C# C#* - A# F# - D# -
+x B,B   A#  - F# G# - F# -
+```
+
+## Example 4: English, with Octave Numbers
+
+```
+x C#4,C#4 D#4 - C#4 F#4 - F4  - 
+x C#4,C#4 D#4 - C#4 F#4 - F#4 -
+x C#4,C#4 C#5 - A#4 F#4 - D#4 -
+x B4,B4   A#4 - F#4 G#4 - F#4 -
+```
+
+# Notes Allowed
+
+You can pick your notation system and allowed notes. [reference reading...](https://en.wikipedia.org/wiki/Key_signature_names_and_translations)
+
+MIDI Key       | 60 | 61  | 62 | 63  | 64 | 65 | 66  | 67 | 68 | 69 | 70  | 71 
+---------------|----|-----|----|-----|----|----|-----|----|----|----|-----|----
+SARGAM         | S  | r   | R  | g   | G  | m  | M   | P  | d  | D  | n   | N  
+स र ग म        | सा  | रे॒   | रे  | ग॒    | ग  | म  | म॑   | प  | ध॒  | ध  | नि॒   | नि 
+Carnatic`*`    | S  | r   | R  | g   | G  | m  | M   | P  | d  | D  | n   | N
+English        | C  | C#  | D  | D#  | E  | F  | F#  | G  | G# | A  | A#  | B
+English        | C4 | C#4 | D4 | D#4 | E4 | F4 | F#4 | G4 | G#4| A4 | A#4 | B4
+German         | C  | C#  | D  | D#  | E  | F  | F#  | G  | G# | A  | A#  | H
+Numeric        |    |     |    |     |    |    |     |    |    |    |     |  
+Virtual Piano  |    |     |    |     |    |    |     |    |    |    |     |  
+
+`*`: Partial performance
+
+## Additional Notes (Table Expansion for Notes Allowed)
+Completed?   | MIDI           | Notes
+-------------|----------------|--------------------------
+[ Yes ]      | SARGAM         | Romanized Letters
+[ Yes ]      | स र ग म        | komal or flats are underlined. Devangari Scripts
+[ No ]       | Carnatic       | `Partial Performance`
+[ Yes ]      | English        | Without octave number
+[ Yes ]      | English        | With octave number
+[ No ]       | German         | Without octave number
+[ No ]       | Numeric        |
+[ No ]       | Virtual Piano  |
+
+Note: This table (Additional Notes) is a horizontal expansion of the table from above (Notes Allowed).
+
+## Symbols Allowed
+
+- `-`: Note continuation marker eg. `S - - -` or `C - - -`
+- `x`: Silence marker eg. `S x R x G` or `C x D x E` - lower cased 'x'
+- `.`: Lower octave marker eg. `A#..` - the dot
+- `*`: Higher octave marker. eg. `A#**` - the asterisk
+- `,`: Beat's time sharing separated with a comma eg. `A#,B`
+- `NUMERALS`: 0 - 9, for the Octave Number representation
+- `|`: Optional meassures separator (bhibhag or divisions)
+
+Some special keys are also allowed, in order to be maximum user friendly typed notaions.
+Example: `/` for `|`. `~` for `-`. Please study the source code variables for find and replace.
+
+# ToDOs
+Please see [ToDOs](TODO.md) file.
