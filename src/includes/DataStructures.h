@@ -4,8 +4,8 @@
  * Copyright (c) 2025 - 2025 Bimal Poudel <anytizer@users.noreply.github.com>
  */
 
-#ifndef LMMS_GUI_EDITOR_PIANOROLL_PARSING_DATASTRUCTURES_H
-#define LMMS_GUI_EDITOR_PIANOROLL_PARSING_DATASTRUCTURES_H
+#ifndef LMMS_PLUGIN_MELODYEDITOR_DATASTRUCTURES_H
+#define LMMS_PLUGIN_MELODYEDITOR_DATASTRUCTURES_H
 
 #include <QString>
 
@@ -24,6 +24,8 @@ namespace lmms::gui::editor::pianoroll::parsing
 
 	/**
 	 * To build a dataset of find and replace strings.
+	 * @todo Replace with QMap
+	 * @see https://doc.qt.io/qt-6/qmap.html
 	 */
 	struct FindAndReplace
 	{
@@ -39,4 +41,4 @@ namespace lmms::gui::editor::pianoroll::parsing
 	};
 }
 
-#endif // LMMS_GUI_EDITOR_PIANOROLL_PARSING_DATASTRUCTURES_H
+#endif // LMMS_PLUGIN_MELODYEDITOR_DATASTRUCTURES_H

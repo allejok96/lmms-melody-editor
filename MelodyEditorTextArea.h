@@ -32,13 +32,13 @@ namespace lmms::gui
 			bool loadNotationsFile(QString filename);
 			QFileSystemWatcher watcher;
 			
+			Utilities* u = new Utilities();
+			
 		protected:
 			void mouseDoubleClickEvent(QMouseEvent *event) override;
 			void dragEnterEvent(QDragEnterEvent *event) override;
     		void dropEvent(QDropEvent *event) override;
-			void wheelEvent(QWheelEvent *event) override;
-			
-			Utilities* u = new Utilities();
+			void wheelEvent(QWheelEvent *event) override;			
 			
 		public:
 			MelodyEditorTextArea();

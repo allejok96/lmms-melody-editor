@@ -4,6 +4,9 @@
  * Copyright (c) 2025 - 2025 Bimal Poudel <anytizer@users.noreply.github.com>
  */
 
+#ifndef LMMS_PLUGIN_MELODYEDITOR_VIRTUALPIANOPARSER_H
+#define LMMS_PLUGIN_MELODYEDITOR_VIRTUALPIANOPARSER_H
+
 #include "../includes/DataStructures.h"
 #include "AbstractParser.h"
 
@@ -14,10 +17,13 @@ namespace lmms::gui::editor::pianoroll::parsing
 {
     class VirtualpianoParser: public AbstractParser
     {
-        public:
+        private:
             QList<FindAndReplace *> vkr = QList<FindAndReplace *>();
-            virtual void setup() override;
-            
+
+        public:
+            void setup() override;            
             QList<NotationCell *> parse(QString text) override;
     };
 }
+
+#endif // LMMS_PLUGIN_MELODYEDITOR_VIRTUALPIANOPARSER_H

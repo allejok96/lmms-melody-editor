@@ -29,7 +29,7 @@ namespace lmms::gui
 	{
 		this->setAcceptDrops(true);
 
-		// Try to be OS neutral and printer friendly.
+		// Try to be OS neutral ~~and printer friendly~~.
 		// Make a room for zoom out also.
 		QFont font("Consolas", this->u->MIN_FONTSIZE+4); // Consolas | sans-serif @ 14 points
 		this->setFont(font);
@@ -73,7 +73,7 @@ namespace lmms::gui
 		{
 			QString filename = QFileDialog::getOpenFileName(
 				this,                                   // Parent widget
-				QObject::tr("Open Notations"),          // Dialog caption
+				QObject::tr("Select a melody notations file"),          // Dialog caption
 				"~/Desktop",                            // Initial directory
 				QString("Notations File (*.%1);;").arg(this->u->MELODY_EXTENSION) // File filters: double semi-colons
 			);
@@ -99,9 +99,11 @@ namespace lmms::gui
 			if(pointsize>u->MAX_FONTSIZE) pointsize = u->MAX_FONTSIZE;
 			font.setPointSize(pointsize);
 			this->setFont(font);
-
-			event->accept();
 		}
+
+		// @see https://doc.qt.io/qt-6/qml-qtquick-controls-scrollview.html
+		event->accept();
+		QPlainTextEdit::wheelEvent(event); // make scrollable with wheel
 	}
 
 

@@ -4,8 +4,8 @@
  * Copyright (c) 2025 - 2025 Bimal Poudel <anytizer@users.noreply.github.com>
  */
 
-#ifndef LMMS_GUI_EDITOR_PIANOROLL_PARSING_ABSTRACTPARSER_H
-#define LMMS_GUI_EDITOR_PIANOROLL_PARSING_ABSTRACTPARSER_H
+#ifndef LMMS_PLUGIN_MELODYEDITOR_ABSTRACTPARSER_H
+#define LMMS_PLUGIN_MELODYEDITOR_ABSTRACTPARSER_H
 
 #include "../includes/DataStructures.h"
 
@@ -17,7 +17,8 @@ namespace lmms::gui::editor::pianoroll::parsing
 
 /**
  * Info: This is NOT an abstract class!
- * The parser is abstract.
+ * 
+ * The parser is abstract. However, the objects should not be created directly.
  */
 class AbstractParser
 {
@@ -25,43 +26,50 @@ class AbstractParser
         QString _name = "";
         QString _identifier = ""; // lower cased, one-word
 
-        QString replace_symbols(QString text);
-        
+        QList<FindAndReplace *> replacements = QList<FindAndReplace *>();
+        //QString replace_symbols(QString text);
+
+        bool chord_processing = false;
+        int chord_start_position = 0;
+        //QList<FindAndReplace *> *replaces = new QList<FindAndReplace *>();
+        QList<QString> notes = {}; // pure Western/English names; only with sharps | no flats.
+        QList<NotationCell *> chords = {};
+
+        /**
+         * Processing return number of errors.
+         */
+        int process_block(const QString block, QList<NotationCell *> &cells, int &position);
+        int process_line(const QString line, QList<NotationCell *> &cells, int &position);
+        int process_beatnotes(const QString column, QList<NotationCell *> &cells, int &position);
+        int process_tone(const QString tone, QList<NotationCell *> &cells, float length, int &position);
+
+        QString replace(QString text);
+    
     public:
         AbstractParser();
         ~AbstractParser();
         virtual void setup() = 0;
         virtual QList<NotationCell *> parse(QString text) = 0;
 
-        QString name()
+        const QString name() const
         {
             return this->_name;
         }
 
-        QString identifier()
+        const QString identifier() const
         {
             return this->_identifier;
         }
 
-        QString toString() const
+        const QString toString() const
         {
             return _identifier;
         }
 
         int getPianoKey(QString note);
         void cells_to_xml(QList<NotationCell *> cells, QString &xml);
-        int process_block(const QString block, QList<NotationCell *> &cells, int &position);
-        int process_line(const QString line, QList<NotationCell *> &cells, int &position);
-        int process_beatnotes(const QString column, QList<NotationCell *> &cells, int &position);
-        int process_tone(const QString tone, QList<NotationCell *> &cells, float length, int &position);
-
-        QList<FindAndReplace *> *replaces = new QList<FindAndReplace *>();
-        QList<QString> notes = {}; // pure western names only with sharps | no flats.
-        bool chord_processing = false;
-        int chord_start_position = 0;
-        QList<NotationCell *> chords = {};
-};
+    };
 
 }
 
-#endif // LMMS_GUI_EDITOR_PIANOROLL_PARSING_ABSTRACTPARSER_H
+#endif // LMMS_PLUGIN_MELODYEDITOR_ABSTRACTPARSER_H

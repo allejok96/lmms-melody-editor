@@ -4,8 +4,8 @@
  * Copyright (c) 2025 - 2025 Bimal Poudel <anytizer@users.noreply.github.com>
  */
 
-#ifndef LMMS_GUI_EDITOR_PIANOROLL_PARSING_HINDUSTANIPARSER_CPP
-#define LMMS_GUI_EDITOR_PIANOROLL_PARSING_HINDUSTANIPARSER_CPP
+#ifndef LMMS_PLUGIN_MELODYEDITOR_HINDUSTANIPARSER_CPP
+#define LMMS_PLUGIN_MELODYEDITOR_HINDUSTANIPARSER_CPP
 
 #include "../includes/DataStructures.h"
 #include "AbstractParser.h"
@@ -20,10 +20,133 @@ namespace lmms::gui::editor::pianoroll::parsing
     {
         this->_name = "SARGAM / Hindustani";
         this->_identifier = "hindustani";
+
+        // Replace characters not used in SARGAM
+        this->replacements.append(new FindAndReplace("a", ""));
+        this->replacements.append(new FindAndReplace("A", ""));
+        this->replacements.append(new FindAndReplace("e", "")); // NOT a key name
+        this->replacements.append(new FindAndReplace("E", "")); // Not a key name
+        this->replacements.append(new FindAndReplace("i", ""));
+        this->replacements.append(new FindAndReplace("I", ""));
+        //notes.replace("h", ""); // Dha => h part
+        //notes.replace("ha", ""); // dha
+        //notes.replace("HA", ""); // DHA
+        this->replacements.append(new FindAndReplace("h", "")); // dha
+        this->replacements.append(new FindAndReplace("H", "")); // dha
+        this->replacements.append(new FindAndReplace("u", "")); // ru
+
+        this->replacements.append(new FindAndReplace("(K)", "(k)")); // komal | flat
+        // r(k) => R(K) => r
+
+        // to sargam standards - multi letters
+        this->replacements.append(new FindAndReplace("s", "S"));
+        this->replacements.append(new FindAndReplace("सां", "S*"));
+        this->replacements.append(new FindAndReplace("Ṡ", "S*"));
+        this->replacements.append(new FindAndReplace("सा", "S"));
+        this->replacements.append(new FindAndReplace("स", "S"));
+        // some weird notations
+        // notes.replace("ष", "S");
+        // notes.replace("षा", "S");
+        // notes.replace("शा", "S");
+        // notes.replace("श", "S");
+        ////////////////////////
+        this->replacements.append(new FindAndReplace("S", "S+"));
+
+        this->replacements.append(new FindAndReplace("रें", "R*"));
+        this->replacements.append(new FindAndReplace("रे॒", "r"));
+        this->replacements.append(new FindAndReplace("री", "R"));
+        this->replacements.append(new FindAndReplace("रि", "R"));
+        this->replacements.append(new FindAndReplace("र॓", "R"));
+        this->replacements.append(new FindAndReplace("रे", "R"));
+        this->replacements.append(new FindAndReplace("र", "R"));
+        this->replacements.append(new FindAndReplace("ऋ", "R"));
+        this->replacements.append(new FindAndReplace("ॠ", "R"));
+        this->replacements.append(new FindAndReplace("R(k)", "r"));
+        this->replacements.append(new FindAndReplace("r(k)", "r"));
+        this->replacements.append(new FindAndReplace("Ṟ", "r"));
+        this->replacements.append(new FindAndReplace("Ṛ", "R."));
+        this->replacements.append(new FindAndReplace("Ṟ", "r"));
+        this->replacements.append(new FindAndReplace("ṝ", "r"));
+        ////////////////////////
+        this->replacements.append(new FindAndReplace("r", "r+"));
+        this->replacements.append(new FindAndReplace("R", "R+"));
+        
+        this->replacements.append(new FindAndReplace("G̱", "g"));
+        this->replacements.append(new FindAndReplace("ग॒", "g"));
+        this->replacements.append(new FindAndReplace("G", "G"));
+        this->replacements.append(new FindAndReplace("गा", "G"));
+        this->replacements.append(new FindAndReplace("ग", "G"));
+        this->replacements.append(new FindAndReplace("गं", "G*"));
+        this->replacements.append(new FindAndReplace("G(k)", "g"));
+        this->replacements.append(new FindAndReplace("g(k)", "g"));
+        ////////////////////////
+        this->replacements.append(new FindAndReplace("g", "g+"));
+        this->replacements.append(new FindAndReplace("G", "G+"));
+
+        this->replacements.append(new FindAndReplace("म'", "M"));
+        this->replacements.append(new FindAndReplace("मे", "M"));
+        this->replacements.append(new FindAndReplace("म॑", "M")); // with long vertical bar
+        this->replacements.append(new FindAndReplace("म", "m"));
+        this->replacements.append(new FindAndReplace("Ḿ", "M"));
+        this->replacements.append(new FindAndReplace("M̄", "M"));
+        this->replacements.append(new FindAndReplace("m'", "M"));
+        this->replacements.append(new FindAndReplace("M'", "M"));
+        ////////////////////////
+        this->replacements.append(new FindAndReplace("m", "m+"));
+        this->replacements.append(new FindAndReplace("M", "M+"));
+
+        this->replacements.append(new FindAndReplace("p", "P"));
+        this->replacements.append(new FindAndReplace("प़", "P."));
+        this->replacements.append(new FindAndReplace("प", "P"));
+        this->replacements.append(new FindAndReplace("पा", "P"));
+        ////////////////////////
+        this->replacements.append(new FindAndReplace("P", "P+"));
+
+        this->replacements.append(new FindAndReplace("dha", "d"));
+        this->replacements.append(new FindAndReplace("Dha", "D"));
+        this->replacements.append(new FindAndReplace("धै", "D"));
+        this->replacements.append(new FindAndReplace("ध॒", "d")); // colliding with D?
+        this->replacements.append(new FindAndReplace("ध़", "D.")); // lower octave? or komal?
+        this->replacements.append(new FindAndReplace("ध़", "D.")); // lower octave? or komal?
+        this->replacements.append(new FindAndReplace("ध", "D")); // colliding D?
+        this->replacements.append(new FindAndReplace("d(k)", "d"));
+        this->replacements.append(new FindAndReplace("d(k)", "d"));
+        ////////////////////////
+        this->replacements.append(new FindAndReplace("d", "d+"));
+        this->replacements.append(new FindAndReplace("D", "D+"));
+
+        this->replacements.append(new FindAndReplace("Ṉ", "n"));
+        this->replacements.append(new FindAndReplace("नि॒", "n"));
+        this->replacements.append(new FindAndReplace("नि", "N"));
+        this->replacements.append(new FindAndReplace("ऩि", "N."));
+        this->replacements.append(new FindAndReplace("ऩ", "n")); // @todo: NI, nee or ni komal?
+        this->replacements.append(new FindAndReplace("नी", "N"));
+        this->replacements.append(new FindAndReplace("N(k)", "n"));
+        this->replacements.append(new FindAndReplace("n(k)", "n"));
+        ////////////////////////
+        this->replacements.append(new FindAndReplace("n", "n+"));
+        this->replacements.append(new FindAndReplace("N", "N+"));
+
+        // convert to western notes
+        // + sign is appended to lock replacing other notes containing same letters. eg. RE => D4 => DHA? => A
+        this->replacements.append(new FindAndReplace("S+", "C"));
+        this->replacements.append(new FindAndReplace("r+", "C#"));
+        this->replacements.append(new FindAndReplace("R+", "D"));
+        this->replacements.append(new FindAndReplace("g+", "D#"));
+        this->replacements.append(new FindAndReplace("G+", "E"));
+        this->replacements.append(new FindAndReplace("m+", "F"));
+        this->replacements.append(new FindAndReplace("M+", "F#"));
+        this->replacements.append(new FindAndReplace("P+", "G"));
+        this->replacements.append(new FindAndReplace("d+", "G#"));
+        this->replacements.append(new FindAndReplace("D+", "A"));
+        this->replacements.append(new FindAndReplace("n+", "A#"));
+        this->replacements.append(new FindAndReplace("N+", "B"));
+        this->replacements.append(new FindAndReplace("##", "#")); // MA' => F## => F#        
     };
 
     /**
      * @todo Reuse data from PianoRoll
+     * @todo Use find-replace dataset
      * Usage purpose:
      *  - To validate a user input key.
      *  - To convert a key into MIDI key number
@@ -43,132 +166,11 @@ namespace lmms::gui::editor::pianoroll::parsing
         // version: स र ग म
         // version: सा रे ग म
         // version: s r g m
+        // version: S r G m' ... (selected)
         if(text.length()<=0) return {};
         
-        QString notes = this->replace_symbols(text);
-
-        // Replace characters not used in SARGAM
-        notes.replace("a", "");
-        notes.replace("A", "");
-        notes.replace("e", ""); // NOT a key name
-        notes.replace("E", ""); // Not a key name
-        notes.replace("i", "");
-        notes.replace("I", "");
-        //notes.replace("h", ""); // Dha => h part
-        //notes.replace("ha", ""); // dha
-        //notes.replace("HA", ""); // DHA
-        notes.replace("h", ""); // dha
-        notes.replace("H", ""); // dha
-        notes.replace("u", ""); // ru
-
-        notes.replace("(K)", "(k)"); // komal | flat
-        // r(k) => R(K) => r
-
-        // to sargam standards - multi letters
-        notes.replace("s", "S");
-        notes.replace("सां", "S*");
-        notes.replace("Ṡ", "S*");
-        notes.replace("सा", "S");
-        notes.replace("स", "S");
-        // some weird notations
-        // notes.replace("ष", "S");
-        // notes.replace("षा", "S");
-        // notes.replace("शा", "S");
-        // notes.replace("श", "S");
-        ////////////////////////
-        notes.replace("S", "S+");
-
-        notes.replace("रें", "R*");
-        notes.replace("रे॒", "r");
-        notes.replace("री", "R");
-        notes.replace("रि", "R");
-        notes.replace("र॓", "R");
-        notes.replace("रे", "R");
-        notes.replace("र", "R");
-        notes.replace("ऋ", "R");
-        notes.replace("ॠ", "R");
-        notes.replace("R(k)", "r");
-        notes.replace("r(k)", "r");
-        notes.replace("Ṟ", "r");
-        notes.replace("Ṛ", "R.");
-        notes.replace("Ṟ", "r");
-        notes.replace("ṝ", "r");
-        ////////////////////////
-        notes.replace("r", "r+");
-        notes.replace("R", "R+");
-        
-        notes.replace("G̱", "g");
-        notes.replace("ग॒", "g");
-        notes.replace("G", "G");
-        notes.replace("गा", "G");
-        notes.replace("ग", "G");
-        notes.replace("गं", "G*");
-        notes.replace("G(k)", "g");
-        notes.replace("g(k)", "g");
-        ////////////////////////
-        notes.replace("g", "g+");
-        notes.replace("G", "G+");
-
-        notes.replace("म'", "M");
-        notes.replace("मे", "M");
-        notes.replace("म॑", "M"); // with long vertical bar
-        notes.replace("म", "m");
-        notes.replace("Ḿ", "M");
-        notes.replace("M̄", "M");
-        notes.replace("m'", "M");
-        notes.replace("M'", "M");
-        ////////////////////////
-        notes.replace("m", "m+");
-        notes.replace("M", "M+");
-
-        notes.replace("p", "P");
-        notes.replace("प़", "P.");
-        notes.replace("प", "P");
-        notes.replace("पा", "P");
-        ////////////////////////
-        notes.replace("P", "P+");
-
-        notes.replace("dha", "d");
-        notes.replace("Dha", "D");
-        notes.replace("धै", "D");
-        notes.replace("ध॒", "d"); // colliding with D?
-        notes.replace("ध़", "D."); // lower octave? or komal?
-        notes.replace("ध़", "D."); // lower octave? or komal?
-        notes.replace("ध", "D"); // colliding D?
-        notes.replace("d(k)", "d");
-        notes.replace("d(k)", "d");
-        ////////////////////////
-        notes.replace("d", "d+");
-        notes.replace("D", "D+");
-
-        notes.replace("Ṉ", "n");
-        notes.replace("नि॒", "n");
-        notes.replace("नि", "N");
-        notes.replace("ऩि", "N.");
-        notes.replace("ऩ", "n"); // @todo: NI, nee or ni komal?
-        notes.replace("नी", "N");
-        notes.replace("N(k)", "n");
-        notes.replace("n(k)", "n");
-        ////////////////////////
-        notes.replace("n", "n+");
-        notes.replace("N", "N+");
-
-        // convert to western notes
-        // + sign is appended to lock replacing other notes containing same letters. eg. RE => D4 => DHA? => A
-        notes.replace("S+", "C");
-        notes.replace("r+", "C#");
-        notes.replace("R+", "D");
-        notes.replace("g+", "D#");
-        notes.replace("G+", "E");
-        notes.replace("m+", "F");
-        notes.replace("M+", "F#");
-        notes.replace("P+", "G");
-        notes.replace("d+", "G#");
-        notes.replace("D+", "A");
-        notes.replace("n+", "A#");
-        notes.replace("N+", "B");
-        notes.replace("##", "#"); // MA' => F## => F#
-        notes.replace("X",  "x"); // silence marker
+        // QString notes = this->replace_symbols(text);
+        QString notes = this->replace(text);
 
         QStringList blocks = notes.split("#//");
         
@@ -184,4 +186,4 @@ namespace lmms::gui::editor::pianoroll::parsing
     }
 }
 
-#endif // LMMS_GUI_EDITOR_PIANOROLL_PARSING_HINDUSTANIPARSER_CPP
+#endif // LMMS_PLUGIN_MELODYEDITOR_HINDUSTANIPARSER_CPP

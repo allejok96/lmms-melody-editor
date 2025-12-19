@@ -4,8 +4,8 @@
  * Copyright (c) 2025 - 2025 Bimal Poudel <anytizer@users.noreply.github.com>
  */
 
-#ifndef LMMS_GUI_EDITOR_PIANOROLL_PARSING_CARNATICPARSER_CPP
-#define LMMS_GUI_EDITOR_PIANOROLL_PARSING_CARNATICPARSER_CPP
+#ifndef LMMS_PLUGIN_MELODYEDITOR_CARNATICPARSER_CPP
+#define LMMS_PLUGIN_MELODYEDITOR_CARNATICPARSER_CPP
 
 #include "../includes/DataStructures.h"
 #include "AbstractParser.h"
@@ -21,36 +21,40 @@ namespace lmms::gui::editor::pianoroll::parsing
     {
         this->_name = "SARGAM / Carnatic";
         this->_identifier = "carnatic";
+
+        this->replacements.append(new FindAndReplace());
+
+        this->replacements.append(new FindAndReplace("₁", "1"));
+        this->replacements.append(new FindAndReplace("₂", "2"));
+        this->replacements.append(new FindAndReplace("₃", "3"));
+        this->replacements.append(new FindAndReplace("₁", "1")); // different set of sub-numbering?
+        this->replacements.append(new FindAndReplace("₂", "2")); // different set of sub-numbering?
+        this->replacements.append(new FindAndReplace("₃", "3")); // different set of sub-numbering?
+        this->replacements.append(new FindAndReplace("SA", "S"));
+        this->replacements.append(new FindAndReplace("RE", "R"));
+        this->replacements.append(new FindAndReplace("RI", "R"));
+        this->replacements.append(new FindAndReplace("GA", "G"));
+        this->replacements.append(new FindAndReplace("MA", "M"));
+        this->replacements.append(new FindAndReplace("PA", "P"));
+        this->replacements.append(new FindAndReplace("DHA", "D"));
+        this->replacements.append(new FindAndReplace("DA", "D"));
+        this->replacements.append(new FindAndReplace("NI", "N"));
+        this->replacements.append(new FindAndReplace("Ṡ", "S*"));
+        this->replacements.append(new FindAndReplace("Ṡ", "S*"));
+        this->replacements.append(new FindAndReplace("’", "*"));
+
     };
     
     QList<NotationCell *> CarnaticParser::parse(QString text)
     {
         if(text.length()<=0) return {};
         
-        QString notes = this->replace_symbols(text).toUpper();
-        notes.replace("₁", "1");
-        notes.replace("₂", "2");
-        notes.replace("₃", "3");
-        notes.replace("₁", "1"); // different set of sub-numbering?
-        notes.replace("₂", "2"); // different set of sub-numbering?
-        notes.replace("₃", "3"); // different set of sub-numbering?
-        notes.replace("SA", "S");
-        notes.replace("RE", "R");
-        notes.replace("RI", "R");
-        notes.replace("GA", "G");
-        notes.replace("MA", "M");
-        notes.replace("PA", "P");
-        notes.replace("DHA", "D");
-        notes.replace("DA", "D");
-        notes.replace("NI", "N");
-        notes.replace("Ṡ", "S*");
-        notes.replace("Ṡ", "S*");
-        notes.replace("’", "*");
+        QString notes = this->replace(text); // .toUpper();
 
-        for (const QString& key : mapping.keys()) {
-            QString value = mapping[key];
-            notes.replace(key, value);
-        }
+        // for (const QString& key : mapping.keys()) {
+        //     QString value = mapping[key];
+        //     notes.replace(key, value);
+        // }
 
         // S R₁ G₁ M₁ P D₁ N₁ Ṡ
         // S R₂ G₂ M₁ P D₁ N₃ Ṡ
@@ -75,4 +79,4 @@ namespace lmms::gui::editor::pianoroll::parsing
 }
 
 
-#endif // LMMS_GUI_EDITOR_PIANOROLL_PARSING_CARNATICPARSER_CPP
+#endif // LMMS_PLUGIN_MELODYEDITOR_CARNATICPARSER_CPP

@@ -76,7 +76,7 @@ This plugin is now accessible from the Tools Menu; ready to process your melody 
 # Change History / Monthly
 
 ## 2025-12
-
+ - Replacements dataset centralized in AbstractParser.
  - Progress log on monthly basis.
  - Better variable names.
  - Enhance documentation, and links.

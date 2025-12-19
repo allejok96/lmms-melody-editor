@@ -28,9 +28,7 @@ BUILD_PLUGIN(
  
   EMBEDDED_RESOURCES
     src/assets/logo.svg
-    src/assets/icon-logo50x50.svg
-    src/assets/icon-none50x50.svg
-    src/assets/icon-none50x50.ico
+    src/assets/logo.ico
 
     # Notation System Icons
     src/assets/ns-hindustani.svg

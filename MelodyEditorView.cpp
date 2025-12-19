@@ -17,7 +17,6 @@
 #include <QDropEvent>
 #include <QMimeData>
 #include <QFileInfo>
-#include <QPlainTextEdit>
 #include <QFileSystemWatcher>
 #include <QTextStream>
 #include <QEvent>
@@ -39,7 +38,6 @@
 #include "GuiApplication.h"
 #include "PianoRoll.h"
 #include "MidiClip.h"
-#include "Clip.h"
 #include "MidiClipView.h"
 #include "Editor.h"
 
@@ -65,7 +63,9 @@ namespace lmms::gui
 
 		int ui_height = 32; // height for combo box and button
 
-		Utilities* u = new Utilities();
+		// %1 = melodyeditor, %2 = sargam|etc.
+		// @see icons.qrc, CMakeLists.txt
+		QString icon_at = ":/artwork/%1/ns-%2.svg";
 
 		QComboBox *parsers_combobox = new QComboBox(this); // text | data
 		parsers_combobox->setEditable(false);
@@ -80,10 +80,18 @@ namespace lmms::gui
 			// When icon is not found, it will throw message in console.
 			QString parser = pf->parsers[i]->name();
 			QString identifier = pf->parsers[i]->identifier();
-			
-			// %1 = melodyeditor, %2 = sargam|etc.
-			// @see icons.qrc, CMakeLists.txt
-			QString icon = QString(":/artwork/%1/ns-%2").arg(u->identifier).arg(identifier);
+
+			QString icon = QString(icon_at).arg(u->identifier).arg(identifier);
+			QFileInfo fileInfo(icon);
+			if (!fileInfo.exists() || !fileInfo.isFile())
+			{
+				// copy icon from first parser, hindustani?
+				icon = QString(icon_at).arg(u->identifier).arg(pf->parsers[0]->identifier());
+				
+				// even here, if file not found, debug!
+				// qDebug() << "Event the alternative icon was not found."
+			}
+
 			parsers_combobox->addItem(QIcon(icon), parser, identifier);
 		}
 
@@ -99,14 +107,14 @@ namespace lmms::gui
 		QHBoxLayout *layout0 = new QHBoxLayout(nullptr);
 		layout0->addWidget(pte);
 
-		QHBoxLayout *layout2 = new QHBoxLayout(nullptr);
-		layout2->addWidget(parsers_combobox);
-		layout2->addWidget(button);
+		QHBoxLayout *layout1 = new QHBoxLayout(nullptr);
+		layout1->addWidget(parsers_combobox);
+		layout1->addWidget(button);
 
-		QVBoxLayout *layout = new QVBoxLayout(nullptr);
-		layout->addLayout(layout0);
-		layout->addLayout(layout2);
-		this->setLayout(layout);
+		QVBoxLayout *layout2 = new QVBoxLayout(nullptr);
+		layout2->addLayout(layout0);
+		layout2->addLayout(layout1);
+		this->setLayout(layout2);
 
 		QWidget* pw = parentWidget();
 		if (pw!=nullptr)
@@ -119,14 +127,17 @@ namespace lmms::gui
 			flags &= ~Qt::WindowMaximizeButtonHint;
 			flags |= Qt::WindowStaysOnTopHint;
 			pw->setWindowFlags(flags);
+			
+			// pw->move(0, 0); // calculate center
+			// QPoint parentCenter = pw->rect().center();
+			// QPoint childOffset = this->rect().center();
+			// pw->move(parentCenter - childOffset);
 		}
 	}
 
 	void MelodyEditorView::updateMidiClip()
 	{
 		QList<QString> messages = {};
-
-		Utilities* u = new Utilities();
 
 		// Do not process too long melodies. Save CPU.
 		// Prevent accidental freezing, or data loss.

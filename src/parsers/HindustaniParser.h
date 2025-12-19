@@ -4,8 +4,8 @@
  * Copyright (c) 2025 - 2025 Bimal Poudel <anytizer@users.noreply.github.com>
  */
 
-#ifndef LMMS_GUI_EDITOR_PIANOROLL_PARSING_HINDUSTANITPARSER_H
-#define LMMS_GUI_EDITOR_PIANOROLL_PARSING_HINDUSTANITPARSER_H
+#ifndef LMMS_PLUGIN_MELODYEDITOR_HINDUSTANITPARSER_H
+#define LMMS_PLUGIN_MELODYEDITOR_HINDUSTANITPARSER_H
 
 #include "../includes/DataStructures.h"
 #include "AbstractParser.h"
@@ -15,9 +15,9 @@ namespace lmms::gui::editor::pianoroll::parsing
     class HindustaniParser: public AbstractParser
     {
         public:
-            virtual void setup() override;
+            void setup() override;
             QList<NotationCell *> parse(QString text) override;
     };
 }
 
-#endif // LMMS_GUI_EDITOR_PIANOROLL_PARSING_HINDUSTANITPARSER_H
+#endif // LMMS_PLUGIN_MELODYEDITOR_HINDUSTANITPARSER_H

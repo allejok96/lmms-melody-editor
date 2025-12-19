@@ -2,10 +2,13 @@
 
 - Placeholder text effect is not experienced.
 - Notify the need of Qt6 requirements to the developers.
-- Once notations file is loaded, the scrollbar does not behave better.
+- Once notations file is loaded, the scrollbar does not behave better, even when set to appear always.
+- Make parsers[0] icon as application icon. Remove other files.
+- Change namespace from: lmms::gui::editor::pianoroll::parsing to: lmms::plugins::melodyeditor
+- Normal wheel to control scrolling behaviour.
 
 Difficult/Overlapping notes:
-- Arp
+- Arpeggio
 - Chords
 - Strum
 - Arbitrarily overlapping notes
@@ -16,8 +19,7 @@ Difficult/Overlapping notes:
 
 - ~~Use standard mono-spaced, larger font across all OS'es | Consolas?~~
 - ~~File system watcher for a dropped in file, if it is edited externally: it updates here, silently.~~
-- If using external file, operate the editor in readonly mode.
-	- Use a file system watcher.
+- If using external file, in watching mode, operate the editor in readonly mode.
 	- Show the currently watched notations file in the title bar.
 	- If the file is removed or editor disconnected; stay calm.
 	- Silently update audio/notations when file is changed externally.

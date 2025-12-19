@@ -4,6 +4,9 @@
  * Copyright (c) 2025 - 2025 Bimal Poudel <anytizer@users.noreply.github.com>
  */
 
+#ifndef LMMS_PLUGIN_MELODYEDITOR_ENGLISHPARSER_CPP
+#define LMMS_PLUGIN_MELODYEDITOR_ENGLISHPARSER_CPP
+
 #include "../includes/DataStructures.h"
 #include "AbstractParser.h"
 #include "EnglishParser.h"
@@ -49,7 +52,7 @@ namespace lmms::gui::editor::pianoroll::parsing
     {
         if(text.length()<=0) return {};
 
-        QString un = this->replace_symbols(text).toUpper();
+        QString un = this->replace(text).toUpper();
         un.replace("-1", "....."); // @todo: Possibly does not support | requires testing
         un.replace("0", "....");
         un.replace("1", "...");
@@ -63,7 +66,6 @@ namespace lmms::gui::editor::pianoroll::parsing
         un.replace("9", "*****");
 
         int position = 0;
-
         int errors = 0;
         QList<NotationCell *> cells = {};
         QStringList blocks = un.split("#//");
@@ -75,3 +77,5 @@ namespace lmms::gui::editor::pianoroll::parsing
         return cells;
     }
 }
+
+#endif // LMMS_PLUGIN_MELODYEDITOR_ENGLISHPARSER_CPP

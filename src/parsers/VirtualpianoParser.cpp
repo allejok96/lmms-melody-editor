@@ -4,6 +4,9 @@
  * Copyright (c) 2025 - 2025 Bimal Poudel <anytizer@users.noreply.github.com>
  */
 
+#ifndef LMMS_PLUGIN_MELODYEDITOR_VIRTUALPIANOPARSER_CPP
+#define LMMS_PLUGIN_MELODYEDITOR_VIRTUALPIANOPARSER_CPP
+
 #include "../includes/DataStructures.h"
 #include "AbstractParser.h"
 #include "EnglishParser.h"
@@ -147,7 +150,8 @@ namespace lmms::gui::editor::pianoroll::parsing
     {
         if(text.length()<=0) return {};
 
-        QString un = text;
+        QString un = this->replace(text);
+
         un.replace("\r", "\n");
         un.replace("\n\n", "\n");
         QStringList input = un.split(""); // , Qt::KeepEmptyParts);
@@ -181,11 +185,11 @@ namespace lmms::gui::editor::pianoroll::parsing
             }
             else
             {
-                for(int i=0; i<vkr.size(); ++i)
+                for(int i=0; i<this->vkr.size(); ++i)
                 {
-                    if(vkr.at(i)->find == column)
+                    if(this->vkr.at(i)->find == column)
                     {
-                        western.append(vkr.at(i)->replaceWith);
+                        western.append(this->vkr.at(i)->replaceWith);
                         break;
                     }
                 }
@@ -197,3 +201,5 @@ namespace lmms::gui::editor::pianoroll::parsing
         return english->parse(western.join(" "));
     }
 }
+
+#endif // LMMS_PLUGIN_MELODYEDITOR_VIRTUALPIANOPARSER_CPP

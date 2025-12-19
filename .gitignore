@@ -9,3 +9,5 @@
 /qrc_*.cpp
 /src/includes/moc_*.*
 /src/.vscode/
+!icons.qrc
+!icons.rc

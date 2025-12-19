@@ -4,22 +4,24 @@
  * Copyright (c) 2025 - 2025 Bimal Poudel <anytizer@users.noreply.github.com>
  */
 
-#ifndef LMMS_GUI_EDITOR_PIANOROLL_PARSING_MISSINGPARSER_H
-#define LMMS_GUI_EDITOR_PIANOROLL_PARSING_MISSINGPARSER_H
+#ifndef LMMS_PLUGIN_MELODYEDITOR_MISSINGPARSER_H
+#define LMMS_PLUGIN_MELODYEDITOR_MISSINGPARSER_H
 
 #include "AbstractParser.h"
 
 namespace lmms::gui::editor::pianoroll::parsing
 {
 
-    // for wrongly chosen parser, serve as if not available
+    /**
+     * Purpose: To serve when parser not found.
+     */
     class MissingParser: public AbstractParser
     {
         public:
-            virtual void setup() override;
-            virtual QList<NotationCell *> parse(QString text) override;
+            void setup() override;
+            QList<NotationCell *> parse(QString text) override;
     };
 
 }
 
-#endif // LMMS_GUI_EDITOR_PIANOROLL_PARSING_MISSINGPARSER_H
+#endif // LMMS_PLUGIN_MELODYEDITOR_MISSINGPARSER_H

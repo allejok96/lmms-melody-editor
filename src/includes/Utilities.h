@@ -4,8 +4,8 @@
  * Copyright (c) 2025 - 2025 Bimal Poudel <anytizer@users.noreply.github.com>
  */
 
-#ifndef LMMS_GUI_EDITOR_PIANOROLL_PARSING_UTILITIES_H
-#define LMMS_GUI_EDITOR_PIANOROLL_PARSING_UTILITIES_H
+#ifndef LMMS_PLUGIN_MELODYEDITOR_UTILITIES_H
+#define LMMS_PLUGIN_MELODYEDITOR_UTILITIES_H
 
 #include <QString>
 
@@ -17,9 +17,11 @@ namespace lmms::gui::editor::pianoroll::parsing
             /**
              * Used to access the embedded resources.
              * The plguin name when compiled.
-             * @see CMakeLists.txt | MUST match.
+             * @see CMakeLists.txt | MUST match, as internal identifier.
              */
             const QString identifier = "melodyeditor";
+            const QString DEFAULT_ICON = "english"; // failsafe default icon: hindustani | english
+            
 
             Utilities();
             ~Utilities();
@@ -52,4 +54,4 @@ namespace lmms::gui::editor::pianoroll::parsing
     };
 }
 
-#endif // LMMS_GUI_EDITOR_PIANOROLL_PARSING_UTILITIES_H
+#endif // LMMS_PLUGIN_MELODYEDITOR_UTILITIES_H

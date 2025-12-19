@@ -4,8 +4,8 @@
  * Copyright (c) 2025 - 2025 Bimal Poudel <anytizer@users.noreply.github.com>
  */
 
-#ifndef LMMS_GUI_EDITOR_PIANOROLL_PARSING_ABSTRACTPARSER_CPP
-#define LMMS_GUI_EDITOR_PIANOROLL_PARSING_ABSTRACTPARSER_CPP
+#ifndef LMMS_PLUGIN_MELODYEDITOR_ABSTRACTPARSER_CPP
+#define LMMS_PLUGIN_MELODYEDITOR_ABSTRACTPARSER_CPP
 
 #include "../includes/DataStructures.h"
 #include "AbstractParser.h"
@@ -17,7 +17,7 @@ namespace lmms::gui::editor::pianoroll::parsing
 {
     AbstractParser::AbstractParser()
     {
-        this->notes = {};
+        this->notes = {}; // start fresh
         this->notes.append("C");  // 0
         this->notes.append("C#"); // 1
         this->notes.append("D");  // 2
@@ -30,24 +30,13 @@ namespace lmms::gui::editor::pianoroll::parsing
         this->notes.append("A");  // 9
         this->notes.append("A#"); // 10
         this->notes.append("B");  // 11
-    }
 
-    AbstractParser::~AbstractParser()
-    {
-        this->notes.clear();
-    }
-
-    /**
-     * The symbols being replaced are absolutey case-based.
-     */
-    QString AbstractParser::replace_symbols(QString text)
-    {
-        QString notes = text;
-        notes.replace("™", "#");
+        this->replacements = {};
+        this->replacements.append(new FindAndReplace("™", "#"));
         // notes.replace("‘", replace = SpecialKeys.LOWER_OCTAVE_NOTATION }); // appears in front
         
         // common symbols
-        //notes.replace("*", replace = sk.HIGHER_OCTAVE_NOTATION }); // not necessary | same destination
+        // notes.replace("*", replace = sk.HIGHER_OCTAVE_NOTATION }); // not necessary | same destination
         
         // super oddities, rather used in octave identification
         // notes.replace("`", "#"); // sharp/flat
@@ -55,32 +44,90 @@ namespace lmms::gui::editor::pianoroll::parsing
         // notes.replace("’", "#"); // sharp/flat ??
         
         QString higher_octavemarker = "*";
-        notes.replace("º", higher_octavemarker);
-        notes.replace("°", higher_octavemarker);
-        notes.replace("’", higher_octavemarker); // octave change!!
+        this->replacements.append(new FindAndReplace("º", higher_octavemarker));
+        this->replacements.append(new FindAndReplace("°", higher_octavemarker));
+        this->replacements.append(new FindAndReplace("’", higher_octavemarker)); // octave change!!
         //notes.replace("'", higher_octavemarker); // octave change!!
 
         // continuation mark
         QString continuation = "-";
-        notes.replace("-", continuation); // ??
-        notes.replace("-", continuation);
-        notes.replace("_", continuation);
-        notes.replace("—", continuation);
-        notes.replace("~", continuation);
-        notes.replace("ऽ", continuation); // avagraha
+        this->replacements.append(new FindAndReplace("-", continuation)); // ??
+        this->replacements.append(new FindAndReplace("-", continuation));
+        this->replacements.append(new FindAndReplace("_", continuation));
+        this->replacements.append(new FindAndReplace("—", continuation));
+        this->replacements.append(new FindAndReplace("~", continuation));
+        this->replacements.append(new FindAndReplace("ऽ", continuation)); // avagraha
 
         // division / bar separator
         QString division = "|";
-        notes.replace("/", division);
-        notes.replace("।", division);
-        notes.replace("|", division);
-        notes.replace("\\", division);
+        this->replacements.append(new FindAndReplace("/", division));
+        this->replacements.append(new FindAndReplace("।", division));
+        this->replacements.append(new FindAndReplace("|", division));
+        this->replacements.append(new FindAndReplace("\\", division));
 
-        return notes;
+        this->replacements.append(new FindAndReplace("X", "x")); // slience marker
     }
+
+    AbstractParser::~AbstractParser()
+    {
+        this->notes.clear();
+        this->replacements.clear();
+    }
+
+    QString AbstractParser::replace(QString text)
+    {
+        foreach(FindAndReplace* far, this->replacements)
+        {
+            text = text.replace(far->find, far->replaceWith);
+        }
+
+        return text;
+    }
+
+    // /**
+    //  * The symbols being replaced are absolutey case-based.
+    //  */
+    // QString AbstractParser::replace_symbols(QString text)
+    // {
+    //     QString notes = text;
+    //     notes.replace("™", "#");
+    //     // notes.replace("‘", replace = SpecialKeys.LOWER_OCTAVE_NOTATION }); // appears in front
+        
+    //     // common symbols
+    //     //notes.replace("*", replace = sk.HIGHER_OCTAVE_NOTATION }); // not necessary | same destination
+        
+    //     // super oddities, rather used in octave identification
+    //     // notes.replace("`", "#"); // sharp/flat
+    //     // notes.replace("'", "#"); // sharp/flat
+    //     // notes.replace("’", "#"); // sharp/flat ??
+        
+    //     QString higher_octavemarker = "*";
+    //     notes.replace("º", higher_octavemarker);
+    //     notes.replace("°", higher_octavemarker);
+    //     notes.replace("’", higher_octavemarker); // octave change!!
+    //     //notes.replace("'", higher_octavemarker); // octave change!!
+
+    //     // continuation mark
+    //     QString continuation = "-";
+    //     notes.replace("-", continuation); // ??
+    //     notes.replace("-", continuation);
+    //     notes.replace("_", continuation);
+    //     notes.replace("—", continuation);
+    //     notes.replace("~", continuation);
+    //     notes.replace("ऽ", continuation); // avagraha
+
+    //     // division / bar separator
+    //     QString division = "|";
+    //     notes.replace("/", division);
+    //     notes.replace("।", division);
+    //     notes.replace("|", division);
+    //     notes.replace("\\", division);
+
+    //     return notes;
+    // }
     
     /**
-     * @todo Reuse data from PianoRoll
+     * @todo Reuse data from PianoRoll if possible
      * Usage purpose:
      *  - To validate a user input key.
      *  - To convert a key into MIDI key number
@@ -101,7 +148,7 @@ namespace lmms::gui::editor::pianoroll::parsing
         {
             if(purenote == this->notes[nn])
             {
-                pianokey = 12 * octave + nn; // notenumber
+                pianokey = 12 * octave + nn; // note number
                 break;
             }
         }
@@ -147,7 +194,7 @@ namespace lmms::gui::editor::pianoroll::parsing
         block_name.replace("'", ""); // To not to break xml with quotes
         
         // @todo Use color rotator for each block
-        QString color = "#a851eb"; // always prepend a # sign
+        QString color = "#7d039f"; // always prepend a # sign
 
         QString xmlbody = "";
         int globallength = 0;
@@ -248,7 +295,7 @@ namespace lmms::gui::editor::pianoroll::parsing
 	int AbstractParser::process_beatnotes(const QString column, QList<NotationCell *> &cells, int &position)
 	{
 		int errors = 0;
-		int width = 48; // 16 x 4? nominator x denominator?
+		int width = 48; // 16 x 4? nominator x denominator? Not sure.
 
 		if(column.contains(","))
 		{
@@ -322,7 +369,7 @@ namespace lmms::gui::editor::pianoroll::parsing
 		// @todo Currently they simply occupy place but do not appear in C4.
 		// @todo Steps still counted.
 		{
-			// @todo Validate tone. Otherwise, they appear in C4 position.
+			// @todo Validate tone. Otherwise, they will appear in C4 position.
 			NotationCell *cell = new NotationCell();
 
 			if(this->chord_processing)
@@ -352,4 +399,4 @@ namespace lmms::gui::editor::pianoroll::parsing
 	}
 }
 
-#endif // LMMS_GUI_EDITOR_PIANOROLL_PARSING_ABSTRACTPARSER_CPP
+#endif // LMMS_PLUGIN_MELODYEDITOR_ABSTRACTPARSER_CPP
