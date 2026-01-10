@@ -1,5 +1,6 @@
 # ToDos for MelodyEditor
 
+- Obtain while icons for MeldoyEditor.
 - Placeholder text effect is not experienced.
 - Notify the need of Qt6 requirements to the developers.
 - Once notations file is loaded, the scrollbar does not behave better, even when set to appear always.

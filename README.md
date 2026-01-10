@@ -230,6 +230,7 @@ Note: This table (Additional Notes) is a horizontal expansion of the table from 
 Some special keys are also allowed, in order to be maximum user friendly typed notaions.
 Example: `/` for `|`. `~` for `-`. Please study the source code variables for find and replace.
 
-# ToDOs
+# ToDOs and History
 
 Please see [ToDOs](TODO.md) file. Also, a help is needed.
+Please see [History](HISTORY.md) file for change logs.

@@ -1,8 +1,9 @@
 # Significant Changes (Monthly)
 
 ## 2025-12
+ - (c) Year bump up.
  - Replacements dataset centralized in AbstractParser.
- - Progress log on monthly basis.
+ - Progress log now on monthly basis.
  - Better variable names.
  - Enhance documentation, and links.
  - Screenhot added [here](src/assets/screenshot.png).
