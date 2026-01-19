@@ -9,18 +9,12 @@
 
 #include "ToolPluginView.h"
 
-#include "MelodyEditor.h"
-#include "MelodyEditorTextArea.h"
-#include "src/parsers/ParsersFactory.h"
-#include "src/includes/Utilities.h"
 
 namespace lmms
 {
 class MelodyEditor;
 }
 
-using lmms::gui::editor::pianoroll::parsing::Utilities;
-using lmms::gui::editor::pianoroll::parsing::ParsersFactory;
 
 namespace lmms::gui
 {
@@ -32,26 +26,13 @@ namespace lmms::gui
 
 			MelodyEditor* m_plugin;
 
-			/**
-			 * Defaults to first registered parser into the factory.
-			 * Despite of -1 as placeholder.
-			 * Often, might register to MissingParser
-			 */
-			int parser_id = 0;
-			
-			Utilities* u = new Utilities();
-
 		public:
 			MelodyEditorView(MelodyEditor* plugin);
-			void updateMidiClip();
-			
-			MelodyEditorTextArea *pte = new MelodyEditorTextArea();
-			const ParsersFactory *pf = new ParsersFactory();
 
+		public slots:
 			void openNotationsFileSelector();
+			void setClipFromPianoRoll();
 
-		protected:
-			void closeEvent(QCloseEvent*) override;
 	};
 
 } // namespace lmms::gui

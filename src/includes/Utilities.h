@@ -9,23 +9,18 @@
 
 #include <QString>
 
-namespace lmms::gui::editor::pianoroll::parsing
+#include "Note.h"
+
+class QMimeData;
+
+namespace lmms
 {
-    class Utilities
-    {
-        public:
-            /**
-             * Used to access the embedded resources.
-             * The plguin name when compiled.
-             * @see CMakeLists.txt | MUST match, as internal identifier.
-             */
-            const QString identifier = "melodyeditor";
-            const QString DEFAULT_ICON = "english"; // failsafe default icon: hindustani | english
-            
+	class MidiClip;
+}
 
-            Utilities();
-            ~Utilities();
 
+namespace lmms::PLUGIN_NAME
+{
             QString fileContents(QString filePath);
             
             /**
@@ -51,7 +46,11 @@ namespace lmms::gui::editor::pianoroll::parsing
             const int MIN_FONTSIZE = 10; // min: readable font size: 10
             const int MAX_FONTSIZE = 28; // max 36
             const int ZOOM_FACTOR = 90; // 80 to 120 | 120 default
-    };
+
+            QString pathFromMimeData(const QMimeData* mimeData);
+
+			//! A semi-fast way to write notes to a MidiClip
+			void writeNotesToMidiClip(const std::vector<Note>& notes, MidiClip* clip);
 }
 
 #endif // LMMS_PLUGINS_MELODYEDITOR_UTILITIES_H

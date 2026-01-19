@@ -4,22 +4,15 @@ INCLUDE(BuildPlugin)
 # SET(RESOURCES icons.qrc)
 
 BUILD_PLUGIN(
-  # @see Utilities.cpp => internal identifier | They MUST match
   melodyeditor
     MelodyEditor.cpp
     MelodyEditorTextArea.cpp
     MelodyEditorView.cpp
     src/includes/Utilities.cpp
-    src/parsers/AbstractParser.cpp
-    src/parsers/CarnaticParser.cpp
-    src/parsers/EnglishParser.cpp
-    src/parsers/GermanParser.cpp
-    src/parsers/HindustaniParser.cpp
-    src/parsers/MissingParser.cpp
-    src/parsers/NashvilleParser.cpp
-    src/parsers/ParsersFactory.cpp
-    src/parsers/VirtualpianoParser.cpp
- 
+    src/parsers/AldaParser.cpp
+    src/parsers/SimpleParser.cpp
+    src/parsers/StringReader.cpp
+
   MOCFILES
     MelodyEditor.h
     MelodyEditorTextArea.h
