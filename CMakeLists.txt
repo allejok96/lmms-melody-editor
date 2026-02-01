@@ -9,9 +9,12 @@ BUILD_PLUGIN(
     MelodyEditorTextArea.cpp
     MelodyEditorView.cpp
     src/includes/Utilities.cpp
-    src/parsers/AldaParser.cpp
-    src/parsers/SimpleParser.cpp
-    src/parsers/StringReader.cpp
+    #src/parsers/AldaParser.cpp
+    #src/parsers/SimpleParser.cpp
+    #src/parsers/StringReader.cpp
+    #src/parsers/LuaParser.cpp
+    src/parsers/ABCParser.cpp
+    ABC-parser/abc_parser.c
 
   MOCFILES
     MelodyEditor.h

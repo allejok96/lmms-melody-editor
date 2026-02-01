@@ -18,8 +18,9 @@
 
 #include "src/includes/Utilities.h"
 #include "src/parsers/AbstractParser.h"
-#include "src/parsers/AldaParser.h"
-#include "src/parsers/SimpleParser.h"
+//#include "src/parsers/AldaParser.h"
+//#include "src/parsers/SimpleParser.h"
+#include "src/parsers/ABCParser.h"
 
 //using lmms::gui::PluginView;
 using lmms::gui::MelodyEditorView;
@@ -54,10 +55,11 @@ extern "C"
 MelodyEditor::MelodyEditor()
 	: ToolPlugin(&melodyeditor_plugin_descriptor, nullptr)
 	, m_parsers{
-		new AldaParser(),
-		new SimpleParser(ENGLISH_DIALECT),
-		new SimpleParser(HINDUSTANI_DIALECT),
-		new SimpleParser(CARNATIC_DIALECT)
+		new ABCParser(),
+		//new AldaParser(),
+		//new SimpleParser(ENGLISH_DIALECT),
+		//new SimpleParser(HINDUSTANI_DIALECT),
+		//new SimpleParser(CARNATIC_DIALECT)
 	}
 	, m_parserModel(new ComboBoxModel(this, "Parser"))
 	, m_liveCodingModel(new BoolModel(true, this, "Auto export"))
@@ -122,9 +124,9 @@ void MelodyEditor::parse()
 		}
 		m_log->setPlainText(parser()->logMessages());
 	}
-	catch (const ParserError& e)
+	catch (std::exception) //(const ParserError& e)
 	{
-		m_log->setPlainText(e.what());
+		//m_log->setPlainText(e.what());
 	}
 }
 
