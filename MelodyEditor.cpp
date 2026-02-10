@@ -21,6 +21,7 @@
 
 #include "src/includes/Utilities.h"
 #include "src/parsers/AbstractParser.h"
+#include "src/parsers/ABCParser.h"
 #include "src/parsers/AldaParser.h"
 #include "src/parsers/SimpleParser.h"
 
@@ -56,6 +57,7 @@ extern "C"
 MelodyEditor::MelodyEditor()
 	: ToolPlugin(&melodyeditor_plugin_descriptor, nullptr)
 	, m_parsers{
+		new ABCParser(),
 		new AldaParser(),
 		new SimpleParser(ENGLISH_DIALECT),
 		new SimpleParser(HINDUSTANI_DIALECT),
