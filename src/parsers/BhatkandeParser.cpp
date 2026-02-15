@@ -540,8 +540,8 @@ double BhatkandeEvaluator::evalGlide(const Node& glide, double pos, double step,
     autoClip->clear();
     for (const Note& note: tmpNotes)
     {
-        autoClip->putValue(note.pos(), note.key() - firstNote.key(), /*quantize*/ false);
-        autoClip->putValue(note.pos() + note.length() / 2, note.key() - firstNote.key(), /*quantize*/ false);
+        autoClip->putValue(note.pos() - firstNote.pos(), note.key() - firstNote.key(), /*quantize*/ false);
+        autoClip->putValue(note.pos() - firstNote.pos() + note.length() / 2, note.key() - firstNote.key(), /*quantize*/ false);
     }
 
     firstNote.setLength(tmpNotes.back().endPos()- firstNote.pos());
